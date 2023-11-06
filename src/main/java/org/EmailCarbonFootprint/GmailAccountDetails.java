@@ -9,12 +9,9 @@ public class GmailAccountDetails {
 	private String emailId;
 	private String gmailAppPassword;
 
-	public GmailAccountDetails() {
-	}
-
-	public GmailAccountDetails(String emailId, String appPassword) {
+	public GmailAccountDetails(String emailId, String emailAppPassword) {
 		this.emailId = emailId;
-		this.gmailAppPassword = appPassword;
+		this.gmailAppPassword = emailAppPassword;
 	}
 
 	public String getUserEmailId() {
@@ -26,26 +23,26 @@ public class GmailAccountDetails {
 	}
 
 	public int getCountOfInboxEmails(Store emailDataStore) throws MessagingException {
-		Folder inboxCount = emailDataStore.getFolder("Inbox");
-		inboxCount.open(Folder.READ_ONLY);
-		int countOfInboxEmails = inboxCount.getMessageCount();
-		inboxCount.close(false);
+		Folder inboxFolder = emailDataStore.getFolder("Inbox");
+		inboxFolder.open(Folder.READ_ONLY);
+		int countOfInboxEmails = inboxFolder.getMessageCount();
+		inboxFolder.close(false);
 		return countOfInboxEmails;
 	}
 
 	public int getCountOfSpamEmails(Store emailDataStore) throws MessagingException {
-		Folder spamCount = emailDataStore.getFolder("[Gmail]/Spam");
-		spamCount.open(Folder.READ_ONLY);
-		int countOfSpamEmails = spamCount.getMessageCount();
-		spamCount.close(false);
+		Folder spamFolder = emailDataStore.getFolder("[Gmail]/Spam");
+		spamFolder.open(Folder.READ_ONLY);
+		int countOfSpamEmails = spamFolder.getMessageCount();
+		spamFolder.close(false);
 		return countOfSpamEmails;
 	}
 
 	public int getCountOfSentEmails(Store emailDataStore) throws MessagingException {
-		Folder sentCount = emailDataStore.getFolder("[Gmail]/Sent Mail");
-		sentCount.open(Folder.READ_ONLY);
-		int countOfSentEmails = sentCount.getMessageCount();
-		sentCount.close(false);
+		Folder sentFolder = emailDataStore.getFolder("[Gmail]/Sent Mail");
+		sentFolder.open(Folder.READ_ONLY);
+		int countOfSentEmails = sentFolder.getMessageCount();
+		sentFolder.close(false);
 		return countOfSentEmails;
 	}
 }
