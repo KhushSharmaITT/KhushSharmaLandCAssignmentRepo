@@ -7,11 +7,11 @@ import javax.mail.Store;
 public class GmailAccountDetails {
 
 	private String emailId;
-	private String gmailAppPassword;
+	private String AppPassword;
 
 	public GmailAccountDetails(String emailId, String emailAppPassword) {
 		this.emailId = emailId;
-		this.gmailAppPassword = emailAppPassword;
+		this.AppPassword = emailAppPassword;
 	}
 
 	public String getUserEmailId() {
@@ -19,7 +19,7 @@ public class GmailAccountDetails {
 	}
 
 	public String getUserPassword() {
-		return gmailAppPassword;
+		return AppPassword;
 	}
 
 	public int getCountOfInboxEmails(Store emailDataStore) throws MessagingException {
