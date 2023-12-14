@@ -1,0 +1,60 @@
+1) For input--->
+    Class Name --> ConsoleService{
+                       getUserInput(String Message)
+           }
+
+
+2) For Connection, Read and Write To Database(com.Database Package)---->
+    Class Name---> DatabaseService{
+                  intializeConnection()
+                  readFromDatabase(String Query)
+                  writeToDatabase(String Query)
+                  save()
+          }
+3) For Query in Database(com.Database Package)----->
+    Class Name----> UserRepository{
+                                  readData()
+                                  writeData()
+  
+         }
+4) One model class for user to get and set the values which user entered----->
+    Class name-----> UserDetails(com.User Package){
+         private String Name;
+         private String Age;
+         get();
+         set();
+         }
+
+5)One Controller class----->
+   Class Name-----> SignUpController()(com.SignUp Package){
+             try{ 
+                  //getUserInput
+                 //Creation of user
+                 //readData() ||  writeData()
+                 //notifyOnCreation()
+                 }
+ 
+             cacth(Custom/Standard Exception e){
+                      
+                         notifyOnFailure(e.getMessage());
+
+                    }
+     }
+
+6) notify to user on creation and failure
+Class Name----> NotificationService(com.Notification package){
+       
+        notifyOnCreation(){}
+        notifyOnFailure(String msg){}
+  
+    }
+
+
+
+
+
+
+
+
+
+
