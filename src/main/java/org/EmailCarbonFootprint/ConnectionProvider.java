@@ -6,9 +6,9 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 
-public class GmailConnection {
+public class ConnectionProvider {
 
-	static Store getGmailConnection(GmailAccountDetails accDetails) throws MessagingException {
+	static Store getGmailConnection(String emailId, String password) throws MessagingException {
 		Properties emailConnectionProperties = new Properties();
 		emailConnectionProperties.setProperty("mail.store.protocol", "imaps");
 		emailConnectionProperties.setProperty("mail.imap.host", "imap.example.com");
@@ -18,7 +18,7 @@ public class GmailConnection {
 
 		Session connectionSession = Session.getInstance(emailConnectionProperties, null);
 		Store emailDataStore = connectionSession.getStore("imaps");
-		emailDataStore.connect("imap.gmail.com", accDetails.getUserEmailId(), accDetails.getUserPassword());
+		emailDataStore.connect("imap.gmail.com", emailId, password);
 		return emailDataStore;
 	}
 }

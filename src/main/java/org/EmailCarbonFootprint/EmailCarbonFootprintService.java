@@ -3,8 +3,11 @@ package org.EmailCarbonFootprint;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EmailCarbonFootprintCalculator {
+import javax.mail.MessagingException;
+import javax.mail.Store;
 
+public class EmailCarbonFootprintService{
+ 
 	private static final double CARBON_FOOTPRINT_OF_INBOX_EMAIL = 4.0;
 	private static final double CARBON_FOOTPRINT_OF_SPAM_EMAIL = 0.3;
 	private static final double CARBON_FOOTPRINT_OF_SENT_EMAIL = 4.9;
@@ -14,30 +17,35 @@ public class EmailCarbonFootprintCalculator {
 	private static final String INBOX = "inbox";
 	private static final String SENT = "sent";
 	private static final String SPAM = "spam";
-	private String emailIds;
+	private String emailId;
+	private String password;
 	private String source;
-	private int inboxEmailsCount;
-	private int sentEmailsCount;
-	private int spamEmailsCount;
+	private int inboxEmailCount;
+	private int sentEmailCount;
+	private int spamEmailCount;
+	GmailAccountDetails gmailAccountDetails;
+	Store emailDataStore;
 	static Map<String, String> emailCountDetails;
 
-	public EmailCarbonFootprintCalculator(String emailId, int inboxEmails, int sentEmails, int spamEmails) {
-		this.emailIds = emailId;
-		this.inboxEmailsCount = inboxEmails;
-		this.sentEmailsCount = sentEmails;
-		this.spamEmailsCount = spamEmails;
+	public EmailCarbonFootprintService(String emailId, String password) throws MessagingException {
+		this.emailId = emailId;
+		this.password = password;
+        emailDataStore = ConnectionProvider.getGmailConnection(this.emailId, this.password);
+        gmailAccountDetails = new GmailAccountDetails(emailId, password,emailDataStore);
+		this.inboxEmailCount = gmailAccountDetails.getCountOfInboxEmails();
+		this.sentEmailCount = gmailAccountDetails.getCountOfSentEmails();
+		this.spamEmailCount = gmailAccountDetails.getCountOfSpamEmails();
 		this.source = getEmailSource(emailId);
-		calculateEmailCarbonFootprint(source, emailIds, inboxEmailsCount, sentEmailsCount, spamEmailsCount);
+		calculateEmailCarbonFootprint();
 	}
 
-	private static void calculateEmailCarbonFootprint(String source, String emailId, int inboxEmailsCount, int sentEmailsCount,
-			int spamEmailsCount) {
+	private void calculateEmailCarbonFootprint() {
 		emailCountDetails = new HashMap<String, String>();
 		emailCountDetails.put(EMAIL_ID, emailId);
 		emailCountDetails.put(SOURCE, source);
-		emailCountDetails.put(INBOX, Double.toString(inboxEmailsCount * CARBON_FOOTPRINT_OF_INBOX_EMAIL));
-		emailCountDetails.put(SENT, Double.toString(sentEmailsCount * CARBON_FOOTPRINT_OF_SENT_EMAIL));
-		emailCountDetails.put(SPAM, Double.toString(spamEmailsCount * CARBON_FOOTPRINT_OF_SPAM_EMAIL));
+		emailCountDetails.put(INBOX, Double.toString(inboxEmailCount * CARBON_FOOTPRINT_OF_INBOX_EMAIL));
+		emailCountDetails.put(SENT, Double.toString(sentEmailCount * CARBON_FOOTPRINT_OF_SENT_EMAIL));
+		emailCountDetails.put(SPAM, Double.toString(spamEmailCount * CARBON_FOOTPRINT_OF_SPAM_EMAIL));
 	}
 
 	private static String getEmailSource(String emailId) {
