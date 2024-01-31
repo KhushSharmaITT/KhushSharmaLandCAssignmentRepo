@@ -4,19 +4,41 @@ import java.util.InputMismatchException;
 
 class KaprekarConstant {
 
-	private static int findKaprekarRoutine(int number) {
+	private static int[] arrayOfDigits;
+	private static int ascendingNumber;
+	private static int descendingNumber;
+	private static int inputNumber;
+	private static int numberOfDigits;
+	private static boolean flag;
+
+	private static void prepareData(int index) {
+
+		if (arrayOfDigits == null) {
+			arrayOfDigits = new int[numberOfDigits];
+		}
+		if (flag) {
+			int digit = inputNumber % 10;
+			arrayOfDigits[index] = digit;
+		} else {
+			ascendingNumber = ascendingNumber * 10 + arrayOfDigits[index];
+			descendingNumber = descendingNumber * 10 + arrayOfDigits[(numberOfDigits - 1) - index];
+		}
+	}
+
+	private static int findKaprekarRoutine() {
 
 		int iterations = 0;
-		int numberOfDigits = (Integer.toString(number)).length();
+		numberOfDigits = (Integer.toString(inputNumber)).length();
 
-		int[] arrayOfDigits = new int[numberOfDigits];
-
-		while (number != 6174) {
-			for (int i = numberOfDigits - 1; i >= 0; i--) {
-				int digit = number % 10;
-				arrayOfDigits[i] = digit;
-				number /= 10;
+		while (inputNumber != 6174) {
+			ascendingNumber = 0;
+			descendingNumber = 0;
+			for (int index = numberOfDigits - 1; index >= 0; index--) {
+				flag = true;
+				prepareData(index);
+				inputNumber /= 10;
 			}
+			flag = false;
 
 			if (arrayOfDigits[0] == arrayOfDigits[1] && arrayOfDigits[1] == arrayOfDigits[2]
 					&& arrayOfDigits[2] == arrayOfDigits[3])
@@ -24,25 +46,22 @@ class KaprekarConstant {
 
 			Arrays.sort(arrayOfDigits);
 
-			int ascendingNumber = 0;
-			int descendingNumber = 0;
-
-			for (int i = 0; i < numberOfDigits; i++) {
-				ascendingNumber = ascendingNumber * 10 + arrayOfDigits[i];
-				descendingNumber = descendingNumber * 10 + arrayOfDigits[(numberOfDigits - 1) - i];
+			for (int index = 0; index < numberOfDigits; index++) {
+				prepareData(index);
 			}
 
-			number = descendingNumber - ascendingNumber;
+			inputNumber = descendingNumber - ascendingNumber;
 			iterations++;
+
 		}
 
 		return iterations;
 	}
 
-	private static boolean checkKaprekarConstant(int inputChoice) throws InputMismatchException {
+	private static boolean checkForValidInput() throws InputMismatchException {
 
-		if (Integer.toString(inputChoice).length() < 4
-				|| Integer.toString(inputChoice).length() > 4) {
+		if (Integer.toString(inputNumber).length() < 4
+				|| Integer.toString(inputNumber).length() > 4) {
 			throw new InputMismatchException();
 		}
 		return true;
@@ -59,13 +78,12 @@ class KaprekarConstant {
 			boolean checkForInput;
 			int iterations = 0;
 			switch (inputChoice) {
-
 			case 1:
 				System.out.print("Enter the number:\n");
-				int inputNumber = input.nextInt();
-				checkForInput = checkKaprekarConstant(inputNumber);
+				inputNumber = input.nextInt();
+				checkForInput = checkForValidInput();
 				if (checkForInput) {
-					iterations = findKaprekarRoutine(inputNumber);
+					iterations = findKaprekarRoutine();
 				}
 				System.out.println(
 						"Number of iterations to reach kaprekar routine are:\n" + iterations);
